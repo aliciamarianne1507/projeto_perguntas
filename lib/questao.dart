@@ -1,6 +1,3 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import 'package:flutter/material.dart';
 
 class Questao extends StatelessWidget {
@@ -9,6 +6,14 @@ class Questao extends StatelessWidget {
   Questao(this.texto);
   @override
   Widget build(BuildContext context) {
-    return Text(texto);
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.all(10),
+      child: Text(
+        texto,
+        style: TextStyle(fontSize: 28, fontFamily: 'Arial'),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }
