@@ -9,30 +9,36 @@ void main() {
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
 
+  final List<Map> _perguntas = [
+    {
+      'texto': 'Qual é a sua cor favorita?',
+      'respostas': ['Preto', 'Vermelho', 'Verde', 'Branco']
+    },
+    {
+      'texto': 'Qual é o seu animal favorito?',
+      'respostas': ['Coelho', 'Cobra', 'Elefante', 'Leão']
+    },
+    {
+      'texto': 'Qual é o seu instrutor favorito?',
+      'respostas': ['Maria', 'Joao', 'Leo', 'Pedro']
+    }
+  ];
   void _responder() {
     setState(() {
       _perguntaSelecionada++;
     });
+    print(_perguntaSelecionada);
+  }
+
+  bool get temPerguntaSelecionada {
+    return _perguntaSelecionada < _perguntas.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Map> perguntas = [
-      {
-        'texto': 'Qual é a sua cor favorita?',
-        'respostas': ['Preto', 'Vermelho', 'Verde', 'Branco']
-      },
-      {
-        'texto': 'Qual é o seu animal favorito?',
-        'respostas': ['Coelho', 'Cobra', 'Elefante', 'Leão']
-      },
-      {
-        'texto': 'Qual é o seu instrutor favorito?',
-        'respostas': ['Maria', 'Joao', 'Leo', 'Pedro']
-      }
-    ];
-
-    List<String> respostas = perguntas[_perguntaSelecionada]['respostas'];
+    List<String> respostas = temPerguntaSelecionada
+        ? _perguntas[_perguntaSelecionada]['respostas']
+        : [];
     //Iterable<Resposta> widgets = respostas.map((e) => Resposta(e, _responder));
 
     //for (var textoResp in perguntas[_perguntaSelecionada]['respostas']) {
@@ -44,12 +50,18 @@ class _PerguntaAppState extends State<PerguntaApp> {
         appBar: AppBar(
           title: Text('Perguntas'),
         ),
-        body: Column(
-          children: <Widget>[
-            Questao(perguntas[_perguntaSelecionada]['texto']),
-            ...respostas.map((e) => Resposta(e, _responder))
-          ],
-        ),
+        body: temPerguntaSelecionada
+            ? Column(
+                children: <Widget>[
+                  Questao(_perguntas[_perguntaSelecionada]['texto']),
+                  ...respostas.map((e) => Resposta(e, _responder))
+                ],
+              )
+            : Center(
+                child: Text(
+                "Obrigado por responder",
+                style: TextStyle(fontSize: 28),
+              )),
       ),
     );
   }
