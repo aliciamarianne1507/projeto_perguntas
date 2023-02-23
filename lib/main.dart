@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'questao.dart';
-import 'reposta.dart';
+import 'components/resultado.dart';
+import 'components/questionario.dart';
 
 void main() {
   runApp(PerguntaApp());
@@ -8,26 +8,49 @@ void main() {
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
+  var _pontuacaoTotal = 0;
 
   final List<Map> _perguntas = [
     {
       'texto': 'Qual é a sua cor favorita?',
-      'respostas': ['Preto', 'Vermelho', 'Verde', 'Branco']
+      'respostas': [
+        {'texto': 'Preto', 'pontuacao': 10},
+        {'texto': 'Vermelho', 'pontuacao': 5},
+        {'texto': 'Verde', 'pontuacao': 3},
+        {'texto': 'Branco', 'pontuacao': 1}
+      ]
     },
     {
       'texto': 'Qual é o seu animal favorito?',
-      'respostas': ['Coelho', 'Cobra', 'Elefante', 'Leão']
+      'respostas': [
+        {'texto': 'Coelho', 'pontuacao': 6},
+        {'texto': 'Cobra', 'pontuacao': 5},
+        {'texto': 'Elefante', 'pontuacao': 10},
+        {'texto': 'Leão', 'pontuacao': 6}
+      ]
     },
     {
       'texto': 'Qual é o seu instrutor favorito?',
-      'respostas': ['Maria', 'Joao', 'Leo', 'Pedro']
+      'respostas': [
+        {'texto': 'Maria', 'pontuacao': 10},
+        {'texto': 'Joao', 'pontuacao': 5},
+        {'texto': 'Leo', 'pontuacao': 4},
+        {'texto': 'Pedro', 'pontuacao': 10}
+      ]
     }
   ];
-  void _responder() {
+  void _responder(int pontuacao) {
     setState(() {
       _perguntaSelecionada++;
+      _pontuacaoTotal += pontuacao;
     });
-    print(_perguntaSelecionada);
+  }
+
+  void _reiniciarQuestionario() {
+    setState(() {
+      _perguntaSelecionada = 0;
+      _pontuacaoTotal = 0;
+    });
   }
 
   bool get temPerguntaSelecionada {
@@ -36,9 +59,6 @@ class _PerguntaAppState extends State<PerguntaApp> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> respostas = temPerguntaSelecionada
-        ? _perguntas[_perguntaSelecionada]['respostas']
-        : [];
     //Iterable<Resposta> widgets = respostas.map((e) => Resposta(e, _responder));
 
     //for (var textoResp in perguntas[_perguntaSelecionada]['respostas']) {
@@ -51,17 +71,8 @@ class _PerguntaAppState extends State<PerguntaApp> {
           title: Text('Perguntas'),
         ),
         body: temPerguntaSelecionada
-            ? Column(
-                children: <Widget>[
-                  Questao(_perguntas[_perguntaSelecionada]['texto']),
-                  ...respostas.map((e) => Resposta(e, _responder))
-                ],
-              )
-            : Center(
-                child: Text(
-                "Obrigado por responder",
-                style: TextStyle(fontSize: 28),
-              )),
+            ? Questionario(_perguntas, _perguntaSelecionada, _responder)
+            : Resultado(_pontuacaoTotal, _reiniciarQuestionario),
       ),
     );
   }
